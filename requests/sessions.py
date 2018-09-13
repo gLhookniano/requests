@@ -10,11 +10,10 @@ requests (cookies, auth, proxies).
 import os
 import sys
 import time
-from collections import Mapping
 from datetime import timedelta
 
 from .auth import _basic_auth_str
-from .compat import cookielib, is_py3, OrderedDict, urljoin, urlparse
+from .compat import cookielib, is_py3, OrderedDict, urljoin, urlparse, Mapping
 from .cookies import (
     cookiejar_from_dict, extract_cookies_to_jar, RequestsCookieJar, merge_cookies)
 from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT
@@ -454,8 +453,8 @@ class Session(SessionRedirectMixin):
         :param url: URL for the new :class:`Request` object.
         :param params: (optional) Dictionary or bytes to be sent in the query
             string for the :class:`Request`.
-        :param data: (optional) Dictionary, bytes, or file-like object to send
-            in the body of the :class:`Request`.
+        :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+            object to send in the body of the :class:`Request`.
         :param json: (optional) json to send in the body of the
             :class:`Request`.
         :param headers: (optional) Dictionary of HTTP Headers to send with the
@@ -551,7 +550,8 @@ class Session(SessionRedirectMixin):
         r"""Sends a POST request. Returns :class:`Response` object.
 
         :param url: URL for the new :class:`Request` object.
-        :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
+        :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+            object to send in the body of the :class:`Request`.
         :param json: (optional) json to send in the body of the :class:`Request`.
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
@@ -563,7 +563,8 @@ class Session(SessionRedirectMixin):
         r"""Sends a PUT request. Returns :class:`Response` object.
 
         :param url: URL for the new :class:`Request` object.
-        :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
+        :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+            object to send in the body of the :class:`Request`.
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
         """
@@ -574,7 +575,8 @@ class Session(SessionRedirectMixin):
         r"""Sends a PATCH request. Returns :class:`Response` object.
 
         :param url: URL for the new :class:`Request` object.
-        :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.
+        :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+            object to send in the body of the :class:`Request`.
         :param \*\*kwargs: Optional arguments that ``request`` takes.
         :rtype: requests.Response
         """
@@ -736,7 +738,12 @@ def session():
     """
     Returns a :class:`Session` for context-management.
 
+    .. deprecated:: 1.0.0
+
+        This method has been deprecated since version 1.0.0 and is only kept for
+        backwards compatibility. New code should use :class:`~requests.sessions.Session`
+        to create a session. This may be removed at a future date.
+
     :rtype: Session
     """
-
     return Session()

@@ -244,12 +244,16 @@ dictionary of data will automatically be form-encoded when the request is made::
       ...
     }
 
-You can also pass a list of tuples to the ``data`` argument. This is particularly
-useful when the form has multiple elements that use the same key::
+The ``data`` argument can also have multiple values for each key. This can be
+done by making ``data`` either a list of tuples or a dictionary with lists
+as values. This is particularly useful when the form has multiple elements that
+use the same key::
 
-    >>> payload = (('key1', 'value1'), ('key1', 'value2'))
-    >>> r = requests.post('http://httpbin.org/post', data=payload)
-    >>> print(r.text)
+    >>> payload_tuples = [('key1', 'value1'), ('key1', 'value2')]
+    >>> r1 = requests.post('http://httpbin.org/post', data=payload_tuples)
+    >>> payload_dict = {'key1': ['value1', 'value2']}
+    >>> r2 = requests.post('http://httpbin.org/post', data=payload_dict)
+    >>> print(r1.text)
     {
       ...
       "form": {
@@ -260,6 +264,8 @@ useful when the form has multiple elements that use the same key::
       },
       ...
     }
+    >>> r1.text == r2.text
+    True
 
 There are times that you may want to send data that is not form-encoded. If
 you pass in a ``string`` instead of a ``dict``, that data will be posted directly.
@@ -342,13 +348,11 @@ support this, but there is a separate package which does -
 For sending multiple files in one request refer to the :ref:`advanced <advanced>`
 section.
 
-.. warning:: It is strongly recommended that you open files in `binary mode`_.
-             This is because Requests may attempt to provide the
-             ``Content-Length`` header for you, and if it does this value will
-             be set to the number of *bytes* in the file. Errors may occur if
-             you open the file in *text mode*.
-
-.. _binary mode: https://docs.python.org/2/tutorial/inputoutput.html#reading-and-writing-files
+.. warning:: It is strongly recommended that you open files in :ref:`binary
+             mode <tut-files>`. This is because Requests may attempt to provide
+             the ``Content-Length`` header for you, and if it does this value
+             will be set to the number of *bytes* in the file. Errors may occur
+             if you open the file in *text mode*.
 
 
 Response Status Codes

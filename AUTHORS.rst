@@ -187,3 +187,5 @@ Patches and Suggestions
 - Nehal J Wani (`@nehaljwani <https://github.com/nehaljwani>`_)
 - Demetrios Bairaktaris (`@DemetriosBairaktaris <https://github.com/demetriosbairaktaris>`_)
 - Darren Dormer (`@ddormer <https://github.com/ddormer>`_)
+- Rajiv Mayani (`@mayani <https://github.com/mayani>`_)
+- Antti Kaihola (`@akaihola <https://github.com/akaihola>`_)

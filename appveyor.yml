@@ -25,6 +25,11 @@ environment:
       PYTHON_ARCH: "64"
       TOXENV: "py36"
 
+    - PYTHON: "C:\\Python37-x64"
+      PYTHON_VERSION: "3.7.x"
+      PYTHON_ARCH: "64"
+      TOXENV: "py37"
+
 install:
   # Install Python (from the official .msi of http://python.org) and pip when
   # not already installed.
@@ -41,8 +46,9 @@ install:
 
   # Upgrade to the latest version of pip to avoid it displaying warnings
   # about it being out of date.
-  - "pip install --disable-pip-version-check --user --upgrade pip"
+  - "python -m pip install --upgrade pip wheel"
   - "C:\\MinGW\\bin\\mingw32-make"
+  - "pipenv install -e .[socks] --skip-lock"
 
 test_script:
   - "C:\\MinGW\\bin\\mingw32-make coverage"

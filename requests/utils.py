@@ -9,7 +9,6 @@ that are also useful for external consumption.
 """
 
 import codecs
-import collections
 import contextlib
 import io
 import os
@@ -29,7 +28,7 @@ from .compat import parse_http_list as _parse_list_header
 from .compat import (
     quote, urlparse, bytes, str, OrderedDict, unquote, getproxies,
     proxy_bypass, urlunparse, basestring, integer_types, is_py3,
-    proxy_bypass_environment, getproxies_environment)
+    proxy_bypass_environment, getproxies_environment, Mapping)
 from .cookies import cookiejar_from_dict
 from .structures import CaseInsensitiveDict
 from .exceptions import (
@@ -301,7 +300,7 @@ def to_key_val_list(value):
     if isinstance(value, (str, bytes, bool, int)):
         raise ValueError('cannot encode objects that are not 2-tuples')
 
-    if isinstance(value, collections.Mapping):
+    if isinstance(value, Mapping):
         value = value.items()
 
     return list(value)
@@ -467,7 +466,7 @@ def _parse_content_type_header(header):
             if index_of_equals != -1:
                 key = param[:index_of_equals].strip(items_to_strip)
                 value = param[index_of_equals + 1:].strip(items_to_strip)
-            params_dict[key] = value
+            params_dict[key.lower()] = value
     return content_type, params_dict
 
 
@@ -696,6 +695,8 @@ def should_bypass_proxies(url, no_proxy):
 
     :rtype: bool
     """
+    # Prioritize lowercase environment variables over uppercase
+    # to keep a consistent behaviour with other http projects (curl, wget).
     get_proxy = lambda k: os.environ.get(k) or os.environ.get(k.upper())
 
     # First check whether no_proxy is defined. If it is, check that the URL
@@ -704,6 +705,10 @@ def should_bypass_proxies(url, no_proxy):
     if no_proxy is None:
         no_proxy = get_proxy('no_proxy')
     parsed = urlparse(url)
+
+    if parsed.hostname is None:
+        # URLs don't always have hostnames, e.g. file:/// urls.
+        return True
 
     if no_proxy:
         # We need to check whether we match here. We need to see if we match
